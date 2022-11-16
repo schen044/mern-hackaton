@@ -8,8 +8,9 @@ import CategoryList from '../../components/CategoryList/CategoryList';
 import OrderDetail from '../../components/OrderDetail/OrderDetail';
 import UserLogOut from '../../components/UserLogOut/UserLogOut';
 
-export default function NewOrderPage() {
+export default function NewOrderPage({ user, setUser }) {
     const [ menuItems, setMenuItems ] = useState([])
+    const [ activeCat, setActiveCat ] = useState('')
     const categoriesRef = useRef([])
 
     useEffect(function() {
@@ -17,6 +18,7 @@ export default function NewOrderPage() {
             const items = await itemsAPI.getAll()
             categoriesRef.current = [...new Set(items.map(item => item.category.name))]
             setMenuItems(items)
+            setActiveCat(categoriesRef.current[0])
         })()
     }, [])
 
