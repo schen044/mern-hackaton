@@ -28,6 +28,12 @@ export default function NewOrderPage({ user, setUser }) {
         })();
     }, [])
 
+    /*--- Event Handlers --- */
+    async function handleAddToOrder(itemId) {
+        const cart = await ordersAPI.addItemToCart(itemId)
+        setCart(cart)
+    }
+
     // - Fetch the menuItems from the server via AJAX
     // - When the data comes back, call setMenuItems to save in state
     return (
@@ -44,6 +50,7 @@ export default function NewOrderPage({ user, setUser }) {
             </aside>
             <MenuList
                 menuItems={menuItems.filter(item => item.category.name === activeCat)}
+                handleAddToOrder={handleAddToOrder}
             />
             <OrderDetail order={cart} />
         </main>
