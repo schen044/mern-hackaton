@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import * as itemsAPI from '../../utilities/items-api'
+import * as ordersAPI from '../../utilities/orders-api'
 import './NewOrderPage.css';
 import { Link } from 'react-router-dom';
 import Logo from '../../components/Logo/Logo';
@@ -11,6 +12,7 @@ import UserLogOut from '../../components/UserLogOut/UserLogOut';
 export default function NewOrderPage({ user, setUser }) {
     const [ menuItems, setMenuItems ] = useState([])
     const [ activeCat, setActiveCat ] = useState('')
+    const [ cart, setCart ] = useState(null)
     const categoriesRef = useRef([])
 
     useEffect(function() {
@@ -19,7 +21,11 @@ export default function NewOrderPage({ user, setUser }) {
             categoriesRef.current = [...new Set(items.map(item => item.category.name))]
             setMenuItems(items)
             setActiveCat(categoriesRef.current[0])
-        })()
+        })();
+        (async function() {
+            const cart = await ordersAPI.getCart()
+            setCart(cart)
+        })();
     }, [])
 
     // - Fetch the menuItems from the server via AJAX
@@ -39,7 +45,7 @@ export default function NewOrderPage({ user, setUser }) {
             <MenuList
                 menuItems={menuItems.filter(item => item.category.name === activeCat)}
             />
-            <OrderDetail />
+            <OrderDetail order={cart} />
         </main>
     )
 }
